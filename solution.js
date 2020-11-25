@@ -28,7 +28,7 @@ async function scrapeArticles(artictlesLinkList){
     let baseURL = 'https://www.cermati.com/'
     let articlesArray = [] // inimi yang dibungkus ke dalam JSON nanti kalo udah
     
-    artictlesLinkList.forEach(element => {
+    artictlesLinkList.forEach((element, i) => {
         
         axios.get(baseURL.concat(element.url))
             .then(response => {
@@ -37,16 +37,16 @@ async function scrapeArticles(artictlesLinkList){
                 const selector = cheerio.load(html);
                             
                 const url = baseURL.concat(element.url)
-                console.log(url)
+                // console.log(url)
 
                 const title = selector('.post-title').text()
-                console.log(title)
+                // console.log(title)
 
                 const author = selector('.author-name').text()
-                console.log(author)
+                // console.log(author)
                 
                 const postDate = selector('.post-date').text()
-                console.log(postDate)  
+                // console.log(postDate)  
                 
                 let relatedArticles = [];
 
@@ -59,21 +59,36 @@ async function scrapeArticles(artictlesLinkList){
                     }
                     
                 })
-                console.log(relatedArticles)
+                // console.log(relatedArticles)
 
-                console.log('_________________________________________________________')  
-                console.log('---------------------------------------------------------')   
+                // console.log('_________________________________________________________')  
+                // console.log('---------------------------------------------------------')   
                 
+                articlesArray[i] = {
+                    url: url,
+                    title: title,
+                    postingDate: postDate.trim(),
+                    author: author.trim(),
+                    relatedArticles: relatedArticles
+                }  
                 
+                writeJSONFile(articlesArray)
+                // console.log(articlesArray)
         }
     }), (error) => console.log(err);
-        // console.log(baseURL.concat(element.url)); // URL
-        // console.log(baseURL.concat(element.url)); // Title
-        // console.log(baseURL.concat(element.url)); // postindDate
-        // console.log(baseURL.concat(element.url)); // Author
-        // console.log(baseURL.concat(element.url)); // relatedArticles
+        
     });
 
+}
+
+function writeJSONFile(articlesArray){
+    
+    const artikelToWrite = articlesArray.filter(n => n != undefined)
+
+    fs.writeFile('data/solution.json',
+                JSON.stringify(artikelToWrite, null, 4), (err) => {
+                    console.log('Writing Scrape files success')
+                });
 }
 
 getArticlesURL()
