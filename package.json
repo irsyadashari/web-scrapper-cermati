@@ -1,0 +1,20 @@
+{
+  "name": "cermati_web_scraping_challenge",
+  "version": "1.0.0",
+  "description": "this is a fun challenge from cermati.com for me :)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "scrapper"
+  ],
+  "author": "Irsyad Ashari",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.0",
+    "cheerio": "^1.0.0-rc.3",
+    "request": "^2.88.2",
+    "superagent": "^6.1.0"
+  }
+}
