@@ -44,10 +44,21 @@ async function scrapeArticles(artictlesLinkList){
 
                 selector('.panel-items-list > li').each((i, element) => {
                     let articleTailLink = selector(element).find('a').attr('href')
-                    let articleLink = baseURL.concat(articleTailLink)
-                    
+                    let reformatTailLink = articleTailLink.replace(articleTailLink.charAt(0), "")
+
+                    let articleLink = baseURL.concat(reformatTailLink)
+
+                    let clearLink = articleTailLink.replace(/[^a-zA-Z ]/g, " ")
+                    let clearSpaceLink = clearLink.replace(clearLink.charAt(0),"")
+                    let formattedLink = clearSpaceLink.substr(clearSpaceLink.indexOf(" ") + 1)
+
+                    let title = formattedLink.replace(/^\w/, function(c) {
+                        return c.toUpperCase();
+                    });
+
                     relatedArticles[i] = {
-                        article : articleLink
+                        url : articleLink,
+                        title : title
                     }
 
                 })
@@ -75,7 +86,7 @@ async function writeJSONFile(articlesArray){
         articles: articlesArray
     }
     
-    fs.writeFile('data/solution.json',
+    fs.writeFile('solution.json',
                 JSON.stringify(articlesObject, null, 4), (err) => {
                     console.log('Writing Scrape files success')
                 });
