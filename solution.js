@@ -59,10 +59,6 @@ async function scrapeArticles(artictlesLinkList){
                     }
                     
                 })
-                // console.log(relatedArticles)
-
-                // console.log('_________________________________________________________')  
-                // console.log('---------------------------------------------------------')   
                 
                 articlesArray[i] = {
                     url: url,
@@ -82,11 +78,15 @@ async function scrapeArticles(artictlesLinkList){
 }
 
 function writeJSONFile(articlesArray){
-    
-    const artikelToWrite = articlesArray.filter(n => n != undefined)
 
+    var articlesObject = {
+        articles: articlesArray
+    }
+
+    // const artikelToWrite = articlesObject.filter(n => n != undefined)
+    
     fs.writeFile('data/solution.json',
-                JSON.stringify(artikelToWrite, null, 4), (err) => {
+                JSON.stringify(articlesObject, null, 4), (err) => {
                     console.log('Writing Scrape files success')
                 });
 }
