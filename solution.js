@@ -26,7 +26,7 @@ async function getArticlesURL(){
 async function scrapeArticles(artictlesLinkList){
 
     let baseURL = 'https://www.cermati.com/'
-    let articlesArray = [] // inimi yang dibungkus ke dalam JSON nanti kalo udah
+    let articlesArray = [] // the final JSON
     
     artictlesLinkList.forEach((element, i) => {
         
@@ -34,19 +34,11 @@ async function scrapeArticles(artictlesLinkList){
             .then(response => {
             if(response.status == 200){
                 const html = response.data;
-                const selector = cheerio.load(html);
-                            
+                const selector = cheerio.load(html);     
                 const url = baseURL.concat(element.url)
-                // console.log(url)
-
                 const title = selector('.post-title').text()
-                // console.log(title)
-
                 const author = selector('.author-name').text()
-                // console.log(author)
-                
-                const postDate = selector('.post-date').text()
-                // console.log(postDate)  
+                const postDate = selector('.post-date').text() 
                 
                 let relatedArticles = [];
 
@@ -57,7 +49,7 @@ async function scrapeArticles(artictlesLinkList){
                     relatedArticles[i] = {
                         article : articleLink
                     }
-                    
+
                 })
                 
                 articlesArray[i] = {
@@ -69,7 +61,7 @@ async function scrapeArticles(artictlesLinkList){
                 }  
                 
                 writeJSONFile(articlesArray)
-                // console.log(articlesArray)
+
         }
     }), (error) => console.log(err);
         
@@ -77,13 +69,11 @@ async function scrapeArticles(artictlesLinkList){
 
 }
 
-function writeJSONFile(articlesArray){
+async function writeJSONFile(articlesArray){
 
     var articlesObject = {
         articles: articlesArray
     }
-
-    // const artikelToWrite = articlesObject.filter(n => n != undefined)
     
     fs.writeFile('data/solution.json',
                 JSON.stringify(articlesObject, null, 4), (err) => {
